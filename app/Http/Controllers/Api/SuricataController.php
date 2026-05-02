@@ -19,9 +19,8 @@ class SuricataController extends Controller
             ], 404);
         }
 
-        $limit    = $request->get('limit', 50);
-        $severity = $request->get('severity'); // filter: 1, 2, 3
-        $src_ip   = $request->get('src_ip');   // filter by IP
+        $severity = $request->get('severity');
+        $src_ip   = $request->get('src_ip');
 
         $lines  = $this->readAllLines($this->logPath);
         $alerts = [];
@@ -30,10 +29,7 @@ class SuricataController extends Controller
             $data = json_decode($line, true);
             if (!$data || ($data['event_type'] ?? '') !== 'alert') continue;
 
-            // Filter severity
             if ($severity && ($data['alert']['severity'] ?? null) != $severity) continue;
-
-            // Filter src_ip
             if ($src_ip && ($data['src_ip'] ?? '') !== $src_ip) continue;
 
             $alerts[] = [
@@ -50,7 +46,6 @@ class SuricataController extends Controller
         }
 
         $alerts = array_reverse($alerts);
-        $alerts = array_slice($alerts, 0, $limit);
 
         return response()->json([
             'success' => true,

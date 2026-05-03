@@ -22,7 +22,7 @@ class SuricataController extends Controller
         $severity = $request->get('severity');
         $src_ip   = $request->get('src_ip');
 
-        $lines  = $this->readAllLines($this->logPath);
+        $lines = $this->readLastLines($this->logPath, 5000);
         $alerts = [];
 
         foreach ($lines as $line) {
@@ -64,7 +64,7 @@ class SuricataController extends Controller
             ], 404);
         }
 
-        $lines = $this->readAllLines($this->logPath);
+        $lines = $this->readLastLines($this->logPath, 5000);
 
         $high   = 0;
         $medium = 0;
@@ -137,6 +137,16 @@ class SuricataController extends Controller
             $file->next();
         }
         return $result;
+    }
+    private function readFileLines(string $path): \Generator
+    {
+        $handle = fopen($path, 'r');
+        if (!$handle) return;
+        while (!feof($handle)) {
+            $line = trim(fgets($handle));
+            if ($line !== '') yield $line;
+        }
+        fclose($handle);
     }
 
     private function readAllLines(string $path): array

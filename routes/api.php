@@ -19,18 +19,13 @@ Route::get('/test', function () {
 // Public
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/suricata/alerts', [SuricataController::class, 'alerts']);
+Route::get('/suricata/stats', [SuricataController::class, 'stats']);
 
-Route::prefix('suricata')->group(function () {
-    Route::get('/alerts', [SuricataController::class, 'alerts']);
-    Route::get('/stats', [SuricataController::class, 'stats']);
-});
-
-Route::prefix('cowrie')->group(function () {
-    Route::get('/sessions',  [CowrieController::class, 'sessions']);
-    Route::get('/commands',  [CowrieController::class, 'commands']);
-    Route::get('/downloads', [CowrieController::class, 'downloads']);
-    Route::get('/stats',     [CowrieController::class, 'stats']);
-});
+Route::get('/cowrie/sessions', [CowrieController::class, 'sessions']);
+Route::get('/cowrie/commands', [CowrieController::class, 'commands']);
+Route::get('/cowrie/downloads', [CowrieController::class, 'downloads']);
+Route::get('/cowrie/stats', [CowrieController::class, 'stats']);
 
 // Protected
 Route::middleware('auth:sanctum')->group(function () {

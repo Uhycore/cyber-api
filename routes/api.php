@@ -4,6 +4,7 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CowrieController;
 use App\Http\Controllers\Api\SuricataController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,8 +19,18 @@ Route::get('/test', function () {
 // Public
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/suricata/alerts', [SuricataController::class, 'alerts']);
-Route::get('/suricata/stats', [SuricataController::class, 'stats']);
+
+Route::prefix('suricata')->group(function () {
+    Route::get('/alerts', [SuricataController::class, 'alerts']);
+    Route::get('/stats', [SuricataController::class, 'stats']);
+});
+
+Route::prefix('cowrie')->group(function () {
+    Route::get('/sessions',  [CowrieController::class, 'sessions']);
+    Route::get('/commands',  [CowrieController::class, 'commands']);
+    Route::get('/downloads', [CowrieController::class, 'downloads']);
+    Route::get('/stats',     [CowrieController::class, 'stats']);
+});
 
 // Protected
 Route::middleware('auth:sanctum')->group(function () {

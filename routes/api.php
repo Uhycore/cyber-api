@@ -6,8 +6,13 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization');
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CowrieController;
 use App\Http\Controllers\Api\SuricataController;
+use App\Http\Controllers\CowrieWebhookController;
+use App\Http\Controllers\FCMController;
 use Illuminate\Support\Facades\Route;
 
+// routes/api.php
+Route::post('/fcm/register', [FCMController::class, 'register']);
+Route::post('/cowrie/webhook', [CowrieWebhookController::class, 'handle']);
 
 Route::get('/test', function () {
     return response()->json([
